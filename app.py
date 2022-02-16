@@ -8,6 +8,10 @@ app = API()
 def home(request, response):
     response.text = "Hello from the home page"
 
+# @app.route("/home")
+# def home2(request, response):
+#     response.text = "Hello from the SECOND HOME page"
+
 @app.route("/about")
 def about(request, response):
     response.text = "Hello from the about page"
@@ -24,3 +28,11 @@ def tell_age(request, response, age):
 def sum(request, response, num_1, num_2):
     total = int(num_1) + int(num_2)
     response.text = f"{num_1} + {num_2} = {total}"
+
+@app.route("/book")
+class BooksResource:
+    def get(self, req, resp):
+        resp.text = "Books Page"
+    
+    def post(self, req, resp):
+        resp.text = "Endpoint to create a book"
