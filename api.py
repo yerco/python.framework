@@ -18,12 +18,17 @@ class API:
 
         return response(environ, start_response)
 
+    def add_route(self, path, handler):
+        assert path not in self.routes, "Such route already exists"
+
+        self.routes[path] = handler
+
     def route(self, path):
         assert path not in self.routes, "Such route already exists"
         #raise AssertionError("Such route already exists.")
         
         def wrapper(handler):
-            self.routes[path] = handler
+            self.add_route(path, handler)
             return handler
         
         return wrapper
