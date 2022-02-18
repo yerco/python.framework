@@ -85,7 +85,7 @@ def test_class_based_handler_not_allowed_method(api, client):
         client.get("http://testserver/book")
 
 def test_alternative_route(api,client):
-    response_text = "Alternaive way to add a route"
+    response_text = "Alternative way to add a route"
 
     def home(req, resp):
         resp.text = response_text
@@ -160,3 +160,21 @@ def test_middleware_methods_are_called(api, client):
 
     assert process_request_called is True
     assert process_response_called is True
+
+def test_allowed_methods_for_function_based_handlers(api, client):
+    @api.route("/home", allowed_methods=["post"])
+    def home(req, resp):
+        resp.text = "Hello"
+    
+    with pytest.raises(AttributeError):
+        client.get("http://testserver/home")
+    
+    assert client.post("http://testserver/home").text == "Hello"
+
+def test_not_method_specified(api, client):
+    @api.route("/home", allowed_methods=None)
+    def home(req, resp):
+        resp.text = "Hello"
+
+    assert api.routes["/home"]["allowed_methods"] == ["get", "post", "put", "patch", "delete", "options"]
+    
